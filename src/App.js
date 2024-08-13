@@ -1,4 +1,7 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import DrumPad from './components/DrumPad';
+import Display from './components/Display';
+import VolumeControl from './components/VolumeControl';
 import './App.css';
 
 function App() {
