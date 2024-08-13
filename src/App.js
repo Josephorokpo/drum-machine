@@ -17,22 +17,53 @@ const drumPads = [
   { id: 'C', clip: 'audio/Closed-HH.mp3', description: 'Closed-HH' }
 ];
 function App() {
+  const [displayText, setDisplayText] = useState('');
+  const [volume, setVolume] = useState(1);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const drumPad = drumPads.find(pad => pad.id === e.key.toUpperCase());
+      if (drumPad) {
+        playAudio(drumPad.id);
+        setDisplayText(drumPad.description);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const playAudio = (id) => {
+    const audio = document.getElementById(id);
+    if (audio) {
+      audio.volume = volume;
+      audio.play();
+    }
+  };
+
+  const handlePadClick = (id) => {
+    const drumPad = drumPads.find(pad => pad.id === id);
+    if (drumPad) {
+      playAudio(id);
+      setDisplayText(drumPad.description);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div id="drum-machine">
+      <Display text={displayText} />
+      <div id="drum-pads">
+        {drumPads.map(pad => (
+          <DrumPad
+            key={pad.id}
+            id={pad.id}
+            clip={pad.clip}
+            description={pad.description}
+            onClick={handlePadClick}
+          />
+        ))}
+      </div>
+      <VolumeControl volume={volume} onVolumeChange={setVolume} />
     </div>
   );
 }
