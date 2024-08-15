@@ -27,9 +27,14 @@ function App() {
     const audio = document.getElementById(id);
     if (audio) {
       audio.volume = volume;
-      audio.play();
+      audio.play().catch(error => {
+        console.error('Error playing audio:', error);
+      });
+    } else {
+      console.error(`Audio element with id ${id} not found`);
     }
   }, [volume]);
+  
 
   useEffect(() => {
     const handleKeyDown = (e) => {
